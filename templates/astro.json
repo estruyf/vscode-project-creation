@@ -1,0 +1,64 @@
+{
+  "title": "Astro",
+  "description": "Astro is the all-in-one web framework designed for speed. Pull your content from anywhere and deploy everywhere, all powered by your favorite UI components and libraries.",
+  "url": "https://astro.build/",
+  "logo": "",
+  "template": {
+    "command": "npm create astro@latest",
+    "arguments": [{
+        "name": "name",
+        "message": "Project name",
+        "default": "astro-project",
+        "required": true,
+        "flag": "",
+        "type": "string"
+      },
+      {
+        "name": "template",
+        "message": "Project template",
+        "default": "blank",
+        "required": false,
+        "flag": "--template",
+        "type": "string"
+      },
+      {
+        "name": "typescript",
+        "message": "Use TypeScript",
+        "default": false,
+        "required": false,
+        "flag": "--typescript",
+        "options": [
+          "strict",
+          "strictest",
+          "relaxed"
+        ],
+        "type": "string"
+      },
+      {
+        "name": "no-install",
+        "message": "Skip dependency installation",
+        "default": false,
+        "required": false,
+        "flag": "--no-install",
+        "type": "boolean"
+      },
+      {
+        "name": "no-git",
+        "message": "Skip git initialization",
+        "default": false,
+        "required": false,
+        "flag": "--no-git",
+        "type": "boolean"
+      },
+      {
+        "name": "skip-prompt",
+        "message": "Skip prompts",
+        "default": true,
+        "required": false,
+        "flag": "--yes",
+        "type": "boolean",
+        "hidden": true
+      }
+    ]
+  }
+}

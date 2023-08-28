@@ -1,27 +1,25 @@
 {
-  "name": "vscode-react-webview-starter",
-  "displayName": "vscode-react-webview-starter",
-  "description": "",
+  "name": "vscode-project-creation",
+  "displayName": "VSCode Project Creation",
+  "description": "Create a new project",
   "version": "0.0.1",
   "repository": {
     "url": "https://github.com/estruyf/vscode-react-webview-template",
     "type": "git"
   },
   "engines": {
-    "vscode": "^1.71.0"
+    "vscode": "^1.81.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:vscode-react-webview-starter.openWebview"
-  ],
+  "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-react-webview-starter.openWebview",
-        "title": "React Webview: Open webview"
+        "command": "vscode-project-creation.newProject",
+        "title": "Project creation: New..."
       }
     ]
   },
@@ -46,15 +44,17 @@
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "16.x",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
     "@types/uuid": "^8.3.4",
-    "@types/vscode": "^1.71.0",
+    "@types/vscode": "^1.81.0",
     "@types/webpack": "^5.28.1",
     "@types/webpack-dev-server": "^4.7.2",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
     "@vscode/test-electron": "^2.1.5",
+    "@vscode/webview-ui-toolkit": "^1.2.2",
+    "autoprefixer": "^10.4.15",
     "css-loader": "^6.7.1",
     "eslint": "^8.20.0",
     "glob": "^8.0.3",
@@ -65,6 +65,7 @@
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
     "style-loader": "^3.3.1",
+    "tailwindcss": "^3.3.3",
     "ts-loader": "^9.4.1",
     "typescript": "^4.7.4",
     "webpack": "^5.74.0",
