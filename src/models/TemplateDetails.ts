@@ -20,4 +20,6 @@ export interface Argument {
   type: string;
   options?: string[];
   hidden?: boolean;
+  isFolderName?: boolean;
+  removeSpaces?: boolean;
 }

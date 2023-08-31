@@ -10,13 +10,15 @@
         "message": "Project name",
         "default": "astro-project",
         "required": true,
+        "removeSpaces": true,
+        "isFolderName": true,
         "flag": "",
         "type": "string"
       },
       {
         "name": "template",
         "message": "Project template",
-        "default": "blank",
+        "default": "minimal",
         "required": false,
         "flag": "--template",
         "type": "string"
@@ -24,7 +26,6 @@
       {
         "name": "typescript",
         "message": "Use TypeScript",
-        "default": false,
         "required": false,
         "flag": "--typescript",
         "options": [
@@ -32,7 +33,7 @@
           "strictest",
           "relaxed"
         ],
-        "type": "string"
+        "type": "choice"
       },
       {
         "name": "no-install",

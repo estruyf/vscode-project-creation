@@ -1,15 +1,16 @@
-# Visual Studio Code Extension - React Webview Starter
+# Visual Studio Code - Project Creation
 
-This is a starter template for creating a Visual Studio Code extension with a React webview.
+This extension allows you to create a new project from our available templates without the need to leave Visual Studio Code or open your terminal.
 
-## Development
+## Supported frameworks
 
-- Clone this repository
-- Run `npm install` to install dependencies
-- Run `npm run watch` to start developing
+- Astro
 
-## Usage
+## How to use
 
-The webview can be tested/opened by running the `React Webview: Open webview` command from the command palette.
-
-![](./assets/webview.png)
+1. Open the command palette (Ctrl+Shift+P)
+2. Type `Project Creation: New...`
+3. Select the folder where you want to create new projects
+4. Select the framework you want to use
+5. Enter the project details
+6. Click the `Create` button and wait for the project to be created 🚀

@@ -5,9 +5,18 @@ import * as vscode from "vscode";
 import { ExtensionContext, ExtensionMode, Uri, Webview } from "vscode";
 import { MessageHandlerData } from "@estruyf/vscode";
 import { getTemplates } from "./utils/getTemplates";
-import { TemplateDetails } from "./models";
+import { Argument, TemplateDetails } from "./models";
+import { Extension } from "./services/Extension";
+import { Executer } from "./services/CommandExecuter";
+import { Commands } from "./constants";
+import { Notifications } from "./services/Notifications";
+import { Logger } from "./services/Logger";
+import * as os from "os";
+import { parseWinPath } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
+  Extension.getInstance(context);
+
   let disposable = vscode.commands.registerCommand(
     "vscode-project-creation.newProject",
     () => {
@@ -34,15 +43,118 @@ export function activate(context: vscode.ExtensionContext) {
               requestId,
               payload: templates,
             } as MessageHandlerData<TemplateDetails[]>);
-          } else if (command === "GET_DATA_ERROR") {
+          } else if (command === "PICK_FOLDER") {
+            const folderValue =
+              context.globalState.get<string>(`project-location`);
+            const folderUri = folderValue ? Uri.file(folderValue) : undefined;
+
+            const folder = await vscode.window.showOpenDialog({
+              canSelectFolders: true,
+              canSelectFiles: false,
+              canSelectMany: false,
+              openLabel: "Select",
+              title:
+                "Select the parent folder where you want to create the project",
+              defaultUri: folderUri,
+            });
+
+            if (folder && folder.length > 0) {
+              panel.webview.postMessage({
+                command,
+                requestId,
+                payload: folder[0].fsPath,
+              } as MessageHandlerData<string>);
+            } else if (typeof folder === "undefined") {
+              panel.webview.postMessage({
+                command,
+                requestId,
+                payload: undefined,
+              } as MessageHandlerData<string | undefined>);
+            }
+          } else if (command === "GET_STATE") {
+            const stateValue = context.globalState.get<any>(payload);
             panel.webview.postMessage({
               command,
-              requestId, // The requestId is used to identify the response
-              error: `Oops, something went wrong!`,
-            } as MessageHandlerData<string>);
-          } else if (command === "POST_DATA") {
-            vscode.window.showInformationMessage(
-              `Received data from the webview: ${payload.msg}`
+              requestId,
+              payload: stateValue,
+            } as MessageHandlerData<any>);
+          } else if (command === "SET_STATE") {
+            context.globalState.update(payload.key, payload.value);
+          } else if (command === "CREATE_PROJECT") {
+            console.log(payload);
+            const { folder, template, data } = payload;
+
+            if (!folder) {
+              return;
+            }
+
+            await vscode.window.withProgress(
+              {
+                location: vscode.ProgressLocation.Notification,
+                title: `Creating the new project... Check [output window](command:${Commands.showOutputChannel}) for more details`,
+                cancellable: false,
+              },
+              async () => {
+                const cmdArgs = [];
+                let folderName = "";
+
+                for (const arg of template.arguments as Argument[]) {
+                  let value = data[arg.name] || arg.default || undefined;
+                  if (arg.required && typeof value === "undefined") {
+                    vscode.window.showErrorMessage(
+                      `${arg.message} is required`
+                    );
+                    return;
+                  }
+
+                  if (typeof value !== "undefined") {
+                    if (arg.type === "boolean") {
+                      if (value) {
+                        cmdArgs.push(`${arg.flag}`);
+                      }
+                    } else {
+                      if (arg.removeSpaces) {
+                        value = value.replace(/ /g, "_");
+                      }
+
+                      if (arg.isFolderName) {
+                        folderName = value;
+                      }
+
+                      cmdArgs.push(`${arg.flag} ${value}`.trim());
+                    }
+                  }
+                }
+
+                const fullCommand = `${template.command} -- ${cmdArgs.join(
+                  " "
+                )}`;
+                const result = await Executer.executeCommand(
+                  folder,
+                  fullCommand
+                );
+
+                if (result !== 0) {
+                  Notifications.errorNoLog(
+                    `Failed to create the project. Check [output window](command:${Commands.showOutputChannel}) for more details.`
+                  );
+                  return;
+                }
+
+                Logger.info(`Command result: ${result}`);
+
+                if (os.platform() === "win32") {
+                  await vscode.commands.executeCommand(
+                    `vscode.openFolder`,
+                    Uri.file(parseWinPath(join(folder, folderName)))
+                  );
+                } else {
+                  await vscode.commands.executeCommand(
+                    `vscode.openFolder`,
+                    Uri.parse(join(folder, folderName))
+                  );
+                }
+              }
             );
           }
         },
@@ -86,7 +198,7 @@ const getWebviewContent = (context: ExtensionContext, webview: Webview) => {
 	<body>
 		<div id="root"></div>
 
-		<script src="${scriptUrl}" />
+		<script src="${scriptUrl}"></script>
 	</body>
 	</html>`;
 };
