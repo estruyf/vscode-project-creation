@@ -6,6 +6,10 @@
 
 This extension allows you to create a new project from our available templates without the need to leave Visual Studio Code or open your terminal.
 
+<p align="center">
+  <img alt="Project Creation" src="./assets/project-creation-sample.png" />
+</p>
+
 ## Supported frameworks
 
 | Template | Categories | Languages |
