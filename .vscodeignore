@@ -1,8 +1,11 @@
+.github/**
 .vscode/**
 .vscode-test/**
 out/**
 node_modules/**
+scripts/**
 src/**
+webpack/**
 .gitignore
 .yarnrc
 vsc-extension-quickstart.md
@@ -10,4 +13,5 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
-webpack/**
+**/tailwind.config.js
+**/postcss.config.js

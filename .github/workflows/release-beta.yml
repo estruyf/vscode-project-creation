@@ -1,0 +1,30 @@
+name: BETA Release
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: "Build and release"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install the dependencies
+        run: npm ci
+
+      - name: Prepare BETA
+        run: node scripts/beta-release.js $GITHUB_RUN_ID
+
+      - name: Publish
+        run: npx @vscode/vsce publish -p ${{ secrets.VSCE_PAT }} --baseImagesUrl https://github.com/estruyf/vscode-project-creation/dev
+
+      - name: Publish to open-vsx.org
+        run: npx ovsx publish -p ${{ secrets.OPEN_VSX_PAT }}
