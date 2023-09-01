@@ -12,11 +12,13 @@
   },
   "license": "MIT",
   "author": "Elio Struyf <elio@struyfconsulting.be> (https://www.eliostruyf.com)",
-  "badges": [{
-    "description": "Buy me a coffee",
-    "url": "https://img.shields.io/badge/Buy%20me%20a%20coffee-€%203-blue?logo=buy-me-a-coffee&style=flat-square",
-    "href": "https://www.buymeacoffee.com/zMeFRy9"
-  }],
+  "badges": [
+    {
+      "description": "Buy me a coffee",
+      "url": "https://img.shields.io/badge/Buy%20me%20a%20coffee-€%203-blue?logo=buy-me-a-coffee&style=flat-square",
+      "href": "https://www.buymeacoffee.com/zMeFRy9"
+    }
+  ],
   "repository": {
     "url": "https://github.com/estruyf/vscode-react-webview-template",
     "type": "git"
@@ -30,10 +32,12 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [{
-      "command": "vscode-project-creation.newProject",
-      "title": "Project creation: New..."
-    }],
+    "commands": [
+      {
+        "command": "vscode-project-creation.newProject",
+        "title": "Project creation: New..."
+      }
+    ],
     "configuration": {
       "title": "Project creation settings",
       "properties": {
@@ -67,6 +71,8 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@actions/core": "^1.10.0",
+    "@bendera/vscode-webview-elements": "^0.15.0",
     "@estruyf/vscode": "^1.1.0",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
@@ -95,11 +101,9 @@
     "tailwindcss": "^3.3.3",
     "ts-loader": "^9.4.1",
     "typescript": "^4.7.4",
+    "wc-react": "^0.5.1",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1",
-    "@bendera/vscode-webview-elements": "^0.15.0",
-    "wc-react": "^0.5.1"
-  },
-  "dependencies": {}
+    "webpack-dev-server": "^4.11.1"
+  }
 }
