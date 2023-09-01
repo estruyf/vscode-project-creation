@@ -2,7 +2,7 @@
   "name": "vscode-project-creation",
   "displayName": "VSCode Project Creation",
   "description": "Create a new project",
-  "icon": "assets/icons/project-creation-128x128.png",
+  "icon": "assets/project-creation-128x128.png",
   "version": "0.0.1",
   "preview": true,
   "publisher": "eliostruyf",
@@ -12,13 +12,11 @@
   },
   "license": "MIT",
   "author": "Elio Struyf <elio@struyfconsulting.be> (https://www.eliostruyf.com)",
-  "badges": [
-    {
-      "description": "Buy me a coffee",
-      "url": "https://img.shields.io/badge/Buy%20me%20a%20coffee-€%203-blue?logo=buy-me-a-coffee&style=flat-square",
-      "href": "https://www.buymeacoffee.com/zMeFRy9"
-    }
-  ],
+  "badges": [{
+    "description": "Buy me a coffee",
+    "url": "https://img.shields.io/badge/Buy%20me%20a%20coffee-€%203-blue?logo=buy-me-a-coffee&style=flat-square",
+    "href": "https://www.buymeacoffee.com/zMeFRy9"
+  }],
   "repository": {
     "url": "https://github.com/estruyf/vscode-react-webview-template",
     "type": "git"
@@ -32,12 +30,10 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "vscode-project-creation.newProject",
-        "title": "Project creation: New..."
-      }
-    ],
+    "commands": [{
+      "command": "vscode-project-creation.newProject",
+      "title": "Project creation: New..."
+    }],
     "configuration": {
       "title": "Project creation settings",
       "properties": {
