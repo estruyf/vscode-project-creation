@@ -1,10 +1,16 @@
+<h1 align="center">
+  <img alt="Project Creation" src="./assets/project-creation-128x128.png" />
+</h1>
+
 # Visual Studio Code - Project Creation
 
 This extension allows you to create a new project from our available templates without the need to leave Visual Studio Code or open your terminal.
 
 ## Supported frameworks
 
-- Astro
+| Template | Categories | Languages |
+| --- | --- | --- |
+| [Astro](https://astro.build) | `astro`, `ssg` | `typescript` |
 
 ## How to use
 
@@ -14,3 +20,12 @@ This extension allows you to create a new project from our available templates w
 4. Select the framework you want to use
 5. Enter the project details
 6. Click the `Create` button and wait for the project to be created 🚀
+
+## Configuration
+
+You can configure the extension to ignore template categories and/or languages.
+
+| Setting | Description | Default |
+| --- | --- | --- |
+| `projectCreation.categories.ignore` | List of template categories to ignore | `[]` |
+| `projectCreation.languages.ignore` | List of template languages to ignore | `[]` |

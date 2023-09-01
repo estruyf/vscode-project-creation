@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --vscode-settings-textInputBorder: yellow;
+}
+
 html,
 body,
 #root {
@@ -37,4 +41,25 @@ h2 {
   font-size: var(--vscode-font-size);
   line-height: normal;
   margin-bottom: 2px;
+}
+
+.folder_picker {
+  border: 1px solid var(--vscode-dropdown-border);
+  padding: 3px 4px;
+  gap: 0.5em;
+
+  display: flex;
+
+  button {
+    height: 16px;
+  }
+
+  input {
+    flex: 1;
+    background: transparent;
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
 }

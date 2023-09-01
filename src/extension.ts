@@ -30,6 +30,15 @@ export function activate(context: vscode.ExtensionContext) {
         }
       );
 
+      panel.iconPath = {
+        light: Uri.file(
+          join(context.extensionPath, "assets/icons/add-light.svg")
+        ),
+        dark: Uri.file(
+          join(context.extensionPath, "assets/icons/add-dark.svg")
+        ),
+      };
+
       panel.webview.onDidReceiveMessage(
         async (message) => {
           const { command, requestId, payload } = message;
