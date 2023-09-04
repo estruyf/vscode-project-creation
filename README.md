@@ -15,6 +15,7 @@ This extension allows you to create a new project from our available templates w
 | Template | Categories | Languages |
 | --- | --- | --- |
 | [Astro](https://astro.build) | `astro`, `ssg` | `typescript` |
+| [Next.js](https://nextjs.org/) | `nextjs`, `ssg` | `javascript`, `typescript` |
 
 ## How to use
 
