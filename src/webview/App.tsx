@@ -3,12 +3,13 @@ import { Messenger, messageHandler } from '@estruyf/vscode/dist/client';
 import "./styles.css";
 import { useEffect } from 'react';
 import { TemplateDetails, Argument } from '../models';
-import { Button, Checkbox, Dropdown, FolderPicker, TextField } from '../components';
-import CreatableSelect from 'react-select/creatable';
+import { Button, Checkbox, Dropdown, EditableSelect, FolderPicker, TextField } from '../components';
 
-export interface IAppProps { }
+export interface IAppProps {
+  colorScheme: "light" | "dark";
+}
 
-export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChildren<IAppProps>) => {
+export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.PropsWithChildren<IAppProps>) => {
   const [templates, setTemplates] = React.useState<TemplateDetails[]>([]);
   const [folder, setFolder] = React.useState<string>("");
   const [selected, setSelected] = React.useState<TemplateDetails | null>(null);
@@ -38,8 +39,8 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
     if (argument.type === 'choice') {
       return (
         <Dropdown
-          options={argument.options || []}
           label={argument.message}
+          options={argument.options || []}
           value={data[argument.name] || argument.default || ""}
           onChange={(value: string) => {
             if (value) {
@@ -54,63 +55,16 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
 
     if (argument.type === 'freeform') {
       return (
-        <CreatableSelect
-          onChange={(value: any) => console.log(value)}
-          isClearable
-          options={(argument.options || []).map(o => ({
-            label: o,
-            value: o
-          }))}
-          styles={{
-            control: (state) => ({
-              ...state,
-              backgroundColor: 'var(--vscode-settings-dropdownBackground)',
-              borderColor: 'var(--vscode-settings-dropdownBorder)',
-              color: 'var(--vscode-settings-dropdownForeground)',
-              borderRadius: '2px',
-              minHeight: 'auto',
-              ":focus": {
-                ...state[":focus"],
-                borderColor: 'var(--vscode-focusBorder)',
-                outline: 'none'
-              },
-              ":hover": {
-                ...state[":hover"],
-                borderColor: 'var(--vscode-focusBorder)',
-                outline: 'none'
-              }
-            }),
-            menu: (state) => ({
-              ...state,
-              backgroundColor: 'var(--dropdown-background)',
-              borderColor: 'var(--dropdown-border)',
-              color: 'var(--foreground)',
-              borderRadius: '0px 0px 3px 3px',
-              ":hover": {
-                ...state[":hover"],
-                backgroundColor: 'var(--list-hover-background)',
-                color: 'var(--list-hover-foreground)'
-              }
-            }),
-            dropdownIndicator: (state) => ({
-              ...state,
-              padding: "0",
-              "svg": {
-                width: "16px",
-                height: "16px"
-              }
-            }),
-            indicatorSeparator: (state) => ({
-              ...state,
-              display: "none"
-            }),
-            input: (state) => ({
-              ...state,
-              paddingTop: 0,
-              paddingBottom: 0
-            })
-          }}
-        />
+        <EditableSelect
+          label={argument.message}
+          options={argument.options || []}
+          value={data[argument.name] || argument.default || ""}
+          onChange={(value: string) => {
+            setData((prevData: any) => ({
+              ...prevData,
+              [argument.name]: value
+            }))
+          }} />
       );
     }
 
@@ -166,6 +120,10 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
   useEffect(() => {
     messageHandler.request<TemplateDetails[]>(`GET_TEMPLATES`).then((result) => {
       setTemplates(result);
+
+      if (result.length === 1) {
+        setSelected(result[0]);
+      }
     }).catch((err) => {
       setError(err);
     });
@@ -201,8 +159,10 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
                       className={`w-full text-left p-2 hover:bg-[var(--vscode-list-hoverBackground)] ${selected?.title === template.title ? 'bg-[var(--vscode-list-activeSelectionBackground)] text-[var(--vscode-list-activeSelectionForeground)]' : ''}`}
                     >
                       {
-                        template.logo && (
-                          <img src={template.logo} className='inline-block mr-2' style={{ height: `20px` }} />
+                        template.icons && (
+                          colorScheme === "dark" ?
+                            <img src={template.icons.dark} className='inline-block mr-2' style={{ height: `20px` }} /> :
+                            <img src={template.icons.light} className='inline-block mr-2' style={{ height: `20px` }} />
                         )
                       }
                       {template.title}
@@ -221,7 +181,9 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
                   <div className='space-y-2'>
                     {
                       selected.template.arguments.map((argument) => (
-                        renderField(argument)
+                        <div key={argument.name}>
+                          {renderField(argument)}
+                        </div>
                       ))
                     }
                   </div>

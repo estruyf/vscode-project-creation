@@ -2,8 +2,13 @@ export interface TemplateDetails {
   title: string;
   description: string;
   url: string;
-  logo: string;
+  icons: Icons;
   template: Template;
+}
+
+export interface Icons {
+  light: string;
+  dark: string;
 }
 
 export interface Template {
