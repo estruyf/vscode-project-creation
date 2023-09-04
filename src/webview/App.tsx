@@ -14,7 +14,28 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
   const [folder, setFolder] = React.useState<string>("");
   const [selected, setSelected] = React.useState<TemplateDetails | null>(null);
   const [data, setData] = React.useState<any>({});
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<{ [name: string]: string }>({});
+
+  const verifyFolder = React.useCallback(async (folderName: string, field: Argument) => {
+    messageHandler.request<string>(`VERIFY_FOLDER`, { projectFolder: folder, folder: folderName, field }).then((result) => {
+      setError((prevError) => {
+        if (result === undefined) {
+          return prevError;
+        }
+
+        if (result) {
+          return {
+            ...prevError,
+            [field.name]: result
+          };
+        }
+
+        const newError = { ...prevError };
+        delete newError[field.name];
+        return newError;
+      });
+    });
+  }, [folder]);
 
   const renderField = (argument: Argument) => {
     if (argument.hidden) {
@@ -28,10 +49,12 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
             label={argument.message}
             value={data[argument.name] || argument.default || ""}
             placeholder='Folder location'
+            error={error[argument.name]}
             onChange={(value: string) => setData((prevData: any) => ({
               ...prevData,
               [argument.name]: value
-            }))} />
+            }))}
+            validate={argument.isFolderName ? (value: string) => verifyFolder(value, argument) : undefined} />
         </div>
       );
     }
@@ -69,11 +92,19 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
     }
 
     if (argument.type === 'boolean') {
+      let value = false;
+
+      if (typeof data[argument.name] !== "undefined") {
+        value = data[argument.name];
+      } else if (typeof argument.default !== "undefined") {
+        value = argument.default as boolean;
+      }
+
       return (
         <div key={argument.name} className='flex flex-row mt-2 items-center'>
           <Checkbox
             label={argument.message}
-            value={data[argument.name] || argument.default || false}
+            value={value}
             onChange={(value: boolean) => setData((prevData: any) => ({
               ...prevData,
               [argument.name]: value
@@ -100,7 +131,6 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
         })
       }
     }).catch((err) => {
-      setError("");
     });
   };
 
@@ -125,7 +155,6 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
         setSelected(result[0]);
       }
     }).catch((err) => {
-      setError(err);
     });
 
     messageHandler.request<string>(`GET_STATE`, "project-location").then((result) => {
@@ -181,7 +210,7 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
                   <div className='space-y-2'>
                     {
                       selected.template.arguments.map((argument) => (
-                        <div key={argument.name}>
+                        <div key={`${selected.title}-${argument.name}`}>
                           {renderField(argument)}
                         </div>
                       ))
@@ -199,12 +228,13 @@ export const App: React.FunctionComponent<IAppProps> = ({ colorScheme }: React.P
             onClick={() => {
               setSelected(null);
               setData({});
+              setError({});
             }}
           >
             Cancel
           </Button>
           <Button
-            disabled={!folder}
+            disabled={!selected || !folder || Object.keys(error).length > 0}
             onClick={triggerCreation}
           >
             Create

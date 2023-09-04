@@ -1,0 +1,2 @@
+- Validate if project folder exists
+- Open on empty project

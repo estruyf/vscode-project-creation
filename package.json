@@ -52,7 +52,14 @@
           "description": "List of languages to ignore"
         }
       }
-    }
+    },
+    "keybindings": [
+      {
+        "command": "vscode-project-creation.newProject",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

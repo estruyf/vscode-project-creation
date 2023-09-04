@@ -21,7 +21,7 @@ export interface Argument {
   message: string;
   default: boolean | string;
   required: boolean;
-  flag: string;
+  flag: string | { true: string; false: string };
   type: string;
   options?: string[];
   hidden?: boolean;

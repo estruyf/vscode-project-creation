@@ -1,0 +1,93 @@
+{
+  "title": "Next.js",
+  "description": "Next.js enables you to create full-stack Web applications by extending the latest React features, and integrating powerful Rust-based JavaScript tooling for the fastest builds.",
+  "url": "https://nextjs.org/",
+  "icons": {
+    "light": "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png",
+    "dark": "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
+  },
+  "languages": [
+    "javascript",
+    "typescript"
+  ],
+  "categories": [
+    "nextjs",
+    "ssg"
+  ],
+  "template": {
+    "command": "npx create-next-app@latest",
+    "arguments": [{
+        "name": "name",
+        "message": "Project name",
+        "default": "nextjs-project",
+        "required": true,
+        "removeSpaces": true,
+        "isFolderName": true,
+        "flag": "",
+        "type": "string"
+      },
+      {
+        "name": "typescript",
+        "message": "Use TypeScript?",
+        "default": true,
+        "required": false,
+        "flag": {
+          "true": "--ts",
+          "false": "--js"
+        },
+        "type": "boolean"
+      },
+      {
+        "name": "eslint",
+        "message": "Use ESLint config?",
+        "default": true,
+        "required": false,
+        "flag": "--eslint",
+        "type": "boolean"
+      },
+      {
+        "name": "tailwind",
+        "message": "Use Tailwind CSS?",
+        "default": true,
+        "required": false,
+        "flag": "--tailwind",
+        "type": "boolean"
+      },
+      {
+        "name": "app",
+        "message": "Use as App Router project?",
+        "default": true,
+        "required": false,
+        "flag": "--app",
+        "type": "boolean"
+      },
+      {
+        "name": "src-dir",
+        "message": "Use the src/ directory?",
+        "default": false,
+        "required": false,
+        "flag": {
+          "true": "--src-dir",
+          "false": "--no-src-dir"
+        },
+        "type": "boolean"
+      },
+      {
+        "name": "import-alias",
+        "message": "Specify import alias?",
+        "default": "@/*",
+        "required": false,
+        "flag": "--import-alias",
+        "type": "string"
+      },
+      {
+        "name": "example",
+        "message": "Initialize with an example?",
+        "default": "",
+        "required": false,
+        "flag": "--example",
+        "type": "string"
+      }
+    ]
+  }
+}

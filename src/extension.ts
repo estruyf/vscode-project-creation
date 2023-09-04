@@ -12,7 +12,8 @@ import { Commands } from "./constants";
 import { Notifications } from "./services/Notifications";
 import { Logger } from "./services/Logger";
 import * as os from "os";
-import { parseWinPath } from "./utils";
+import { debounce, parseWinPath } from "./utils";
+import { existsSync } from "fs";
 
 export function activate(context: vscode.ExtensionContext) {
   Extension.getInstance(context);
@@ -38,6 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
           join(context.extensionPath, "assets/icons/add-dark.svg")
         ),
       };
+
+      const debounceVerifyFolder = debounce();
 
       panel.webview.onDidReceiveMessage(
         async (message) => {
@@ -89,6 +92,38 @@ export function activate(context: vscode.ExtensionContext) {
             } as MessageHandlerData<any>);
           } else if (command === "SET_STATE") {
             context.globalState.update(payload.key, payload.value);
+          } else if (command === "VERIFY_FOLDER") {
+            let { projectFolder, folder, field } = payload;
+
+            if (!projectFolder || !folder) {
+              panel.webview.postMessage({
+                command,
+                requestId,
+                payload: undefined,
+              } as MessageHandlerData<undefined>);
+            }
+
+            debounceVerifyFolder(async () => {
+              if ((field as Argument).removeSpaces) {
+                folder = folder.replace(/ /g, "_");
+              }
+
+              const absPath = join(projectFolder, folder);
+
+              if (!existsSync(absPath)) {
+                panel.webview.postMessage({
+                  command,
+                  requestId,
+                  payload: "",
+                } as MessageHandlerData<string>);
+              } else {
+                panel.webview.postMessage({
+                  command,
+                  requestId,
+                  payload: "Folder already exists",
+                } as MessageHandlerData<string>);
+              }
+            }, 300);
           } else if (command === "CREATE_PROJECT") {
             Logger.info(
               `Creating project with payload: ${JSON.stringify(payload)}`
@@ -111,7 +146,14 @@ export function activate(context: vscode.ExtensionContext) {
                 let folderName = "";
 
                 for (const arg of template.arguments as Argument[]) {
-                  let value = data[arg.name] || arg.default || undefined;
+                  let value = undefined;
+
+                  if (typeof data[arg.name] !== "undefined") {
+                    value = data[arg.name];
+                  } else if (typeof arg.default !== "undefined") {
+                    value = arg.default;
+                  }
+
                   if (arg.required && typeof value === "undefined") {
                     vscode.window.showErrorMessage(
                       `${arg.message} is required`
@@ -121,10 +163,16 @@ export function activate(context: vscode.ExtensionContext) {
 
                   if (typeof value !== "undefined") {
                     if (arg.type === "boolean") {
-                      if (value) {
+                      if (value && typeof arg.flag === "string") {
                         cmdArgs.push(`${arg.flag}`);
+                      } else if (typeof arg.flag !== "string") {
+                        if (value) {
+                          cmdArgs.push(`${arg.flag.true}`);
+                        } else {
+                          cmdArgs.push(`${arg.flag.false}`);
+                        }
                       }
-                    } else {
+                    } else if (typeof value === "string") {
                       if (arg.removeSpaces) {
                         value = value.replace(/ /g, "_");
                       }
@@ -133,7 +181,17 @@ export function activate(context: vscode.ExtensionContext) {
                         folderName = value;
                       }
 
-                      cmdArgs.push(`${arg.flag} ${value}`.trim());
+                      if (value && arg.flag && typeof arg.flag === "string") {
+                        cmdArgs.push(`${arg.flag} ${value}`.trim());
+                      } else if (arg.flag && typeof arg.flag !== "string") {
+                        if (value) {
+                          cmdArgs.push(`${arg.flag.true} ${value}`.trim());
+                        } else {
+                          cmdArgs.push(`${arg.flag.false} ${value}`.trim());
+                        }
+                      } else if (value) {
+                        cmdArgs.push(value);
+                      }
                     }
                   } else if (arg.type == "divider") {
                     cmdArgs.push(arg.flag);
