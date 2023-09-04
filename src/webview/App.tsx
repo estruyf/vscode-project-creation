@@ -4,6 +4,7 @@ import "./styles.css";
 import { useEffect } from 'react';
 import { TemplateDetails, Argument } from '../models';
 import { Button, Checkbox, Dropdown, FolderPicker, TextField } from '../components';
+import CreatableSelect from 'react-select/creatable';
 
 export interface IAppProps { }
 
@@ -48,6 +49,68 @@ export const App: React.FunctionComponent<IAppProps> = ({ }: React.PropsWithChil
               }))
             }
           }} />
+      );
+    }
+
+    if (argument.type === 'freeform') {
+      return (
+        <CreatableSelect
+          onChange={(value: any) => console.log(value)}
+          isClearable
+          options={(argument.options || []).map(o => ({
+            label: o,
+            value: o
+          }))}
+          styles={{
+            control: (state) => ({
+              ...state,
+              backgroundColor: 'var(--vscode-settings-dropdownBackground)',
+              borderColor: 'var(--vscode-settings-dropdownBorder)',
+              color: 'var(--vscode-settings-dropdownForeground)',
+              borderRadius: '2px',
+              minHeight: 'auto',
+              ":focus": {
+                ...state[":focus"],
+                borderColor: 'var(--vscode-focusBorder)',
+                outline: 'none'
+              },
+              ":hover": {
+                ...state[":hover"],
+                borderColor: 'var(--vscode-focusBorder)',
+                outline: 'none'
+              }
+            }),
+            menu: (state) => ({
+              ...state,
+              backgroundColor: 'var(--dropdown-background)',
+              borderColor: 'var(--dropdown-border)',
+              color: 'var(--foreground)',
+              borderRadius: '0px 0px 3px 3px',
+              ":hover": {
+                ...state[":hover"],
+                backgroundColor: 'var(--list-hover-background)',
+                color: 'var(--list-hover-foreground)'
+              }
+            }),
+            dropdownIndicator: (state) => ({
+              ...state,
+              padding: "0",
+              "svg": {
+                width: "16px",
+                height: "16px"
+              }
+            }),
+            indicatorSeparator: (state) => ({
+              ...state,
+              display: "none"
+            }),
+            input: (state) => ({
+              ...state,
+              paddingTop: 0,
+              paddingBottom: 0
+            })
+          }}
+        />
       );
     }
 

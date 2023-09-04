@@ -26,9 +26,14 @@
         "name": "template",
         "message": "Project template",
         "default": "minimal",
+        "options": [
+          "minimal",
+          "portfolio",
+          "ssr"
+        ],
         "required": false,
         "flag": "--template",
-        "type": "string"
+        "type": "freeform"
       },
       {
         "name": "typescript",
