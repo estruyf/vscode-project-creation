@@ -42,7 +42,7 @@ export const Dropdown: React.FunctionComponent<ISelectProps> = ({ options, label
         <VsOption selected={!value}></VsOption>
         {
           (options || []).map((option) => (
-            <VsOption selected={value === option}>{option}</VsOption>
+            <VsOption key={option.replace(/ /g, "")} selected={value === option}>{option}</VsOption>
           ))
         }
       </VsSingleSelect>

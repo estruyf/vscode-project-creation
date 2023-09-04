@@ -90,7 +90,10 @@ export function activate(context: vscode.ExtensionContext) {
           } else if (command === "SET_STATE") {
             context.globalState.update(payload.key, payload.value);
           } else if (command === "CREATE_PROJECT") {
-            console.log(payload);
+            Logger.info(
+              `Creating project with payload: ${JSON.stringify(payload)}`
+            );
+
             const { folder, template, data } = payload;
 
             if (!folder) {
@@ -132,12 +135,12 @@ export function activate(context: vscode.ExtensionContext) {
 
                       cmdArgs.push(`${arg.flag} ${value}`.trim());
                     }
+                  } else if (arg.type == "divider") {
+                    cmdArgs.push(arg.flag);
                   }
                 }
 
-                const fullCommand = `${template.command} -- ${cmdArgs.join(
-                  " "
-                )}`;
+                const fullCommand = `${template.command} ${cmdArgs.join(" ")}`;
                 const result = await Executer.executeCommand(
                   folder,
                   fullCommand

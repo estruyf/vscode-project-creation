@@ -10,7 +10,8 @@ declare const acquireVsCodeApi: <T = unknown>() => {
 
 const elm = document.querySelector("#root");
 if (elm) {
-  render(<App />, elm);
+  const colorScheme = document.body.getAttribute("data-vscode-theme-kind") === "vscode-light" ? "light" : "dark";
+  render(<App colorScheme={colorScheme} />, elm);
 }
 
 // Webpack HMR

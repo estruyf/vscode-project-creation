@@ -2,7 +2,10 @@
   "title": "Astro",
   "description": "Astro is the all-in-one web framework designed for speed. Pull your content from anywhere and deploy everywhere, all powered by your favorite UI components and libraries.",
   "url": "https://astro.build/",
-  "logo": "https://astro.build/assets/press/astro-icon-light-gradient.svg",
+  "icons": {
+    "light": "https://astro.build/assets/press/astro-icon-dark.svg",
+    "dark": "https://astro.build/assets/press/astro-icon-light-gradient.svg"
+  },
   "languages": [
     "typescript"
   ],
@@ -23,12 +26,24 @@
         "type": "string"
       },
       {
+        "name": "divider",
+        "message": "",
+        "flag": "--",
+        "type": "divider",
+        "hidden": true
+      },
+      {
         "name": "template",
         "message": "Project template",
         "default": "minimal",
+        "options": [
+          "minimal",
+          "portfolio",
+          "ssr"
+        ],
         "required": false,
         "flag": "--template",
-        "type": "string"
+        "type": "freeform"
       },
       {
         "name": "typescript",
