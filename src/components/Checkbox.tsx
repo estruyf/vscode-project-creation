@@ -12,14 +12,15 @@ export interface ICheckboxProps {
 }
 
 export const Checkbox: React.FunctionComponent<ICheckboxProps> = ({ label, value, onChange }: React.PropsWithChildren<ICheckboxProps>) => {
+  const elementRef = React.useRef<any>(null);
 
-  const elementRef = React.useCallback((node: any) => {
-    if (node !== null) {
-      node.addEventListener('vsc-change', (e: any) => {
+  React.useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.addEventListener('vsc-change', (e: any) => {
         onChange(e.target.checked);
       });
     }
-  }, []);
+  }, [elementRef]);
 
   return (
     <VsCheckbox
