@@ -39,7 +39,7 @@
         "options": [
           "minimal",
           "portfolio",
-          "ssr"
+          "starlight"
         ],
         "required": false,
         "flag": "--template",
