@@ -15,22 +15,15 @@ export interface ISelectProps {
 }
 
 export const Dropdown: React.FunctionComponent<ISelectProps> = ({ options, label, value, onChange }: React.PropsWithChildren<ISelectProps>) => {
+  const elementRef = React.useRef<any>(null);
 
-  const elementRef = React.useCallback((node: any) => {
-    const listener = (e: any) => {
-      onChange(e.target.value);
-    };
-
-    if (node !== null) {
-      node.addEventListener('vsc-change', listener);
+  React.useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.addEventListener('vsc-change', (e: any) => {
+        onChange(e.target.value);
+      });
     }
-
-    return () => {
-      if (node !== null) {
-        node.removeEventListener('vsc-change', listener);
-      }
-    }
-  }, []);
+  }, [elementRef]);
 
   return (
     <div className="dropdown-container">

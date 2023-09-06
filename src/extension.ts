@@ -92,6 +92,25 @@ export function activate(context: vscode.ExtensionContext) {
             } as MessageHandlerData<any>);
           } else if (command === "SET_STATE") {
             context.globalState.update(payload.key, payload.value);
+          } else if (command === "SET_AUTO_OPEN") {
+            if (typeof payload.value === "boolean") {
+              const setting =
+                vscode.workspace.getConfiguration("projectCreation");
+              setting.update(
+                "autoOpen",
+                payload.value,
+                vscode.ConfigurationTarget.Global
+              );
+            }
+          } else if (command === "GET_AUTO_OPEN") {
+            const setting =
+              vscode.workspace.getConfiguration("projectCreation");
+            const autoOpen = setting.get<boolean>("autoOpen");
+            panel.webview.postMessage({
+              command,
+              requestId,
+              payload: autoOpen,
+            } as MessageHandlerData<boolean>);
           } else if (command === "VERIFY_FOLDER") {
             let { projectFolder, folder, field } = payload;
 
@@ -235,6 +254,15 @@ export function activate(context: vscode.ExtensionContext) {
       panel.webview.html = getWebviewContent(context, panel.webview);
     }
   );
+
+  if (!vscode.workspace.workspaceFolders) {
+    const setting = vscode.workspace.getConfiguration("projectCreation");
+    const autoOpen = setting.get<boolean>("autoOpen");
+
+    if (autoOpen) {
+      vscode.commands.executeCommand("vscode-project-creation.newProject");
+    }
+  }
 
   context.subscriptions.push(disposable);
 }

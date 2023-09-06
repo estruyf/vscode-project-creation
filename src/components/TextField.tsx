@@ -27,6 +27,17 @@ export const TextField: React.FunctionComponent<ITextFieldProps> = ({
   validate
 }: React.PropsWithChildren<ITextFieldProps>) => {
   const [isInit, setIsInit] = React.useState<boolean>(false);
+  const elementRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    if (elementRef.current) {
+      elementRef.current.addEventListener('vsc-change', (e: any) => {
+        onChange ? onChange(e.target.value) : null;
+
+        validate ? validate(e.target.value) : null;
+      });
+    }
+  }, [elementRef]);
 
   React.useEffect(() => {
     if (!isInit && validate && value) {
@@ -35,16 +46,6 @@ export const TextField: React.FunctionComponent<ITextFieldProps> = ({
       return;
     }
   }, [validate, value])
-
-  const elementRef = React.useCallback((node: any) => {
-    if (node !== null) {
-      node.addEventListener('vsc-change', (e: any) => {
-        onChange ? onChange(e.target.value) : null;
-
-        validate ? validate(e.target.value) : null;
-      });
-    }
-  }, []);
 
   return (
     <div className={`textfield-container ${className || ""}`}>
